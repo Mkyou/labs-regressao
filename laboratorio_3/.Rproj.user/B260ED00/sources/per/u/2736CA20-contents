@@ -1,0 +1,57 @@
+library(tidyverse)
+library(ggthemes)
+library(ggpubr)
+
+df = read_csv("lab3.csv")
+
+#Sem dados repetidos
+df[-1] |> distinct()
+
+#Sem NA
+summary(df)
+
+colnames(df) = c("id", "idade_casa", "distancia_metro", 
+                 "lojas_conveniencia", "preco_unidade_area")
+
+#Plots
+
+df0_5 = filter(df, df$lojas_conveniencia<=5)
+plt1 = ggplot(df0_5, aes(x = factor(lojas_conveniencia), 
+                         y = preco_unidade_area)) +
+  geom_boxplot(varwidth = T, fill = "plum") + 
+  labs(title = "Boxplot", 
+      subtitle = "Preços por área de casas com até 5 conveniência próximas", 
+      x = "Número de conveniências",
+      y = "Preço por área") +
+  ylim(c(0, 120)) +
+  theme_economist()
+
+plt1
+
+df6_10 = filter(df, df$lojas_conveniencia>5)
+plt2 = ggplot(df6_10, aes(x = factor(lojas_conveniencia), 
+                         y = preco_unidade_area)) +
+  geom_boxplot(varwidth = T, fill = "plum") + 
+  labs(title = "Boxplot", 
+       subtitle = "Preços por área de casas com mais de 5 conveniência próximas", 
+       x = "Número de conveniências",
+       y = "Preço por área") +
+  ylim(c(0, 120)) + 
+  theme_economist()
+plt2
+
+
+
+# Scatterplot
+plt3 <- ggplot(df, aes(x=idade_casa, y=preco_unidade_area)) + 
+  geom_point (aes(x=idade_casa, y=preco_unidade_area)) + 
+  geom_smooth(method="lm", se=F) + 
+  ylim(c(0, 130)) + 
+  labs(subtitle="Preço por Unidade de Área Vs. Idade da Casa", 
+       y="Preço por Unidade", 
+       x="Idade da Casa", 
+       title="Scatterplot", 
+       caption = "Source: Webscraping") +
+  theme_economist()
+
+plot(plt3)
