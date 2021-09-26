@@ -1,6 +1,6 @@
 {
     "id": "69085EA5",
-    "path": "G:/My Drive/UFBA/Semestres/2021.2/Análise de Regressão/Laboratórios/laboratorio_5/scripts/analise_de_dados.R",
+    "path": "G:/My Drive/UFBA/Semestres/2021.2/Análise de Regressão/Laboratórios/labs-regressao/laboratorio_5/scripts/analise_de_dados.R",
     "project_path": "scripts/analise_de_dados.R",
     "type": "r_source",
     "hash": "2937665746",
@@ -13,7 +13,7 @@
         "source_window_id": "",
         "Source": "Source",
         "cursorPosition": "94,0",
-        "scrollLine": "77"
+        "scrollLine": "69"
     },
     "folds": "",
     "lastKnownWriteTime": 1631810355,
