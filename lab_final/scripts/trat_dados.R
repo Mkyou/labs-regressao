@@ -74,7 +74,9 @@ new_raw_df = filter(new_raw_df, new_raw_df$num_doors != "?")
 df = new_raw_df |> drop_na()
 
 df |> glimpse()
-  
+
+#todas as observações são diferentes umas das outras
+df |> distinct()
   
 
 
