@@ -69,3 +69,60 @@ ols_mallows_cp(fit1, fit5)
 ols_mallows_cp(fit2, fit5)
 ols_mallows_cp(fit3, fit5)
 ols_mallows_cp(fit4, fit5)
+
+
+library(MASS)
+summary(fit4)
+anova(fit4)
+par(mfrow = c(2,2))
+plotn=plot(fit4)
+shapiro.test(fit4$residuals)
+lmtest::gqtest(fit4)
+qqPlot(fit4, main="QQ Plot") #qq plot for studentized resid 
+# distribution of studentized residuals
+sresid2 <- studres(fit4) 
+hist(sresid2, freq=FALSE, 
+     main="Distribution of Studentized Residuals")
+xm2<-seq(min(sresid2),max(sresid2),length=40) 
+ym2<-dnorm(xm2) 
+lines(xm2, ym2)
+
+# Influential Observations
+# Cook's D plot
+# identify D values > 4/(n-k-1) 
+cutoff2 <- 4/((nrow(lab8)-length(fit4$coefficients)-2)) 
+plot(fit4, which=4, cook.levels=cutoff2)
+abline(h = 4/360, lty = 2)
+
+#DfFits
+dffits2 <- as.data.frame(dffits(fit4))
+thresh3 <- 2*sqrt((nrow(lab8)/length(fit4$coefficients)-1))
+plot(dffits(fit4), type = 'h')
+abline(h = thresh3, lty = 2)
+abline(h = -thresh3, lty = 2)
+
+#DfBetas
+dfbetas2 <- as.data.frame(dfbetas(fit4))
+thresh4 <- 2/sqrt( nrow(lab8))
+par(mfrow=c(2,1))
+plot(dfbetas2$tempo, type='h')
+abline(h = thresh4, lty = 2)
+abline(h = -thresh4, lty = 2)
+plot(dfbetas2$`I(tempo^2)` , type='h')
+abline(h = thresh4, lty = 2)
+abline(h = -thresh4, lty = 2)
+plot(dfbetas2$metro , type='h')
+abline(h = thresh4, lty = 2)
+abline(h = -thresh4, lty = 2)
+plot(dfbetas2$loja , type='h')
+abline(h = thresh4, lty = 2)
+abline(h = -thresh4, lty = 2)
+
+
+dfbetas2$abs1 = abs(dfbetas2$tempo )  
+dfbetas2$abs2 = abs(dfbetas2$`I(tempo^2)`)  
+dfbetas2$abs3 = abs(dfbetas2$metro)  
+dfbetas2$abs4 = abs(dfbetas2$loja)  
+
+#COVratio
+plot(covratio(fit4))
