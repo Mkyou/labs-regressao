@@ -1,7 +1,7 @@
 library(readr)
 library(tidyverse)
 library(ggthemes)
-lab8 = read_csv("C:/Users/gabfr/OneDrive/Área de Trabalho/Trab_Regress2/labs-regressao/laboratorio_8/input/lab8.csv")
+lab8 = read_csv("../input/lab8.csv")
 lab8[-1] |> distinct()
 
 summary(lab8)
