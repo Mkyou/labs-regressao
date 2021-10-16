@@ -1,7 +1,7 @@
 library(readr)
 library(tidyverse)
 library(ggthemes)
-lab8 = read_csv("../input/lab8.csv")
+lab8 = read_csv("input/lab8.csv")
 lab8[-1] |> distinct()
 
 summary(lab8)
@@ -63,7 +63,6 @@ step(fit4, direction = "both", k =log(360) )
 
 fit5 =  lm( preco ~ ., lab8)
 
-install.packages("olsrr")
 library(olsrr)
 ols_mallows_cp(fit1, fit5)
 ols_mallows_cp(fit2, fit5)
@@ -126,3 +125,4 @@ dfbetas2$abs4 = abs(dfbetas2$loja)
 
 #COVratio
 plot(covratio(fit4))
+
