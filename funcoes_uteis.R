@@ -140,7 +140,7 @@ model_hyphotesys_analyses = function(fit){
   vifs = list(`VIFs` = vif(fit), `Média dos Vifs` = mean(vif(fit)), 
               `Tolerância` = 1/vif(fit))
   
-  
+    
   
   return(list(normal, var, var2, indep, vifs))
 }
