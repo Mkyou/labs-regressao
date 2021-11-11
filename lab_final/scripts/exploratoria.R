@@ -1,88 +1,6 @@
+######Ler comentários em Notas de Edições.txt##########
+
 library(tidyverse)
-
-#rodar trat_dados primeiro
-
-# sumário da nova base de dados
-df |> summary()
-
-#aparentemente o número de portas ainda tem "?" nos níveis, mesmo sem
-#nenhuma observação com esse valor
-df$num_doors
-
-#removendo esse level do fator
-df$num_doors = df$num_doors |> droplevels()
-df |> summary()
-
-#a vari?vel make tem quase 50% das observa??es iguais a "other"
-#na vari?vel fuel_system ? s? uma
-
-#Varivel respostal = price
-plot(df$wheel_base, df$price) #
-plot(df$length, df$price)
-plot(df$width, df$price)
-plot(df$height, df$price) #
-plot(df$curb_weight, df$price)
-plot(df$engine_size, df$price)
-plot(df$bore, df$price) #
-plot(df$stroke, df$price) #
-plot(df$compression_ratio, df$price) ##
-plot(df$horsepower, df$price)
-plot(df$peak_rpm, df$price) #
-plot(df$city_mpg, df$price)
-plot(df$highway_mpg, df$price)
-
-#As variaveis Wheel_base, Height, bore, stroke, compression_ratio, peak_rpm, aparentemente,... 
-#não parecem ter uma relação linear com a variavel resposta
-
-plot(df$make, df$price)
-plot(df$fuel_type, df$price)
-plot(df$aspiration, df$price)
-plot(df$num_doors, df$price) #
-plot(df$body_style, df$price)
-plot(df$drive_wheels, df$price)
-plot(df$engine_location, df$price)
-plot(df$engine_type, df$price)
-plot(df$num_cylinders, df$price)
-plot(df$fuel_system, df$price)
-
-#A unica varivel que parece n?o ter muita rela??o com o pre?o ? o num_doors
-#Os boxplots apresentam possiveis valores descrepantes acima de 30000 $
-
-# Modelos de regress?o simples:
-fit1 = lm(price ~ length, df)
-fit2 = lm(price ~ width, df)
-fit3 = lm(price ~ curb_weight, df)
-fit4 = lm(price ~ engine_size, df)
-fit5 = lm(price ~ horsepower, df)
-fit6 = lm(price ~ city_mpg, df)
-fit7 = lm(price ~ highway_mpg, df)
-summary(fit1)
-summary(fit2) #
-summary(fit3) ##
-summary(fit4) ##
-summary(fit5) #
-summary(fit6)
-summary(fit7) #
-par(mfrow=c(2,2), mar=c(5.1,4.1,4.1,2.1))
-plot(fit1)
-plot(fit2)
-plot(fit3)
-plot(fit4) #n normal
-plot(fit5)
-plot(fit6)
-plot(fit7)
-#Todos os residuos n?o apresentam homocedasticidade nem normalidade
-
-step(lm(price ~ ., df), direction = "backward")
-
-df$num_cylinders
-
-fitbetter = lm(formula = price ~ symboling + make + aspiration + body_style + 
-                 wheel_base + length + width + height + curb_weight + engine_type + 
-                 engine_size + fuel_system + bore + stroke + 
-                 compression_ratio + peak_rpm + highway_mpg, data = df)
-summary(fitbetter)
-plot(fitbetter)
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
@@ -224,11 +142,141 @@ model_hyphotesys_analyses = function(fit){
   return(list(normal, var, var2, indep, vifs))
 }
 
-aux = residual_graph_analyses(fitbetter)
-aux
 
-aux2 = model_hyphotesys_analyses(fitbetter)
-aux2[1]
-aux2[2]
-aux2[3]
-aux2[5]
+# sumário da nova base de dados
+df |> summary()
+
+#aparentemente o número de portas ainda tem "?" nos níveis, mesmo sem
+#nenhuma observação com esse valor
+df$num_doors
+
+#removendo esse level do fator
+df$num_doors = df$num_doors |> droplevels()
+df |> summary()
+
+#Varivel respostal = price
+
+#----------------------------Exploratória------------------------------#
+
+my_fn <- function(data, mapping, ...){
+  p <- ggplot(data = data, mapping = mapping) +
+    geom_point() +
+    geom_smooth(method=lm, aes=(accuracy = 0.01),
+                fill="green", color="blue", ...)
+  p}
+
+GGally::ggpairs(df[,-c(1,2,3,4,5,6,7,8,14,15,17)],
+                upper = list(continuous = "cor"),
+                lower = list(continuous = my_fn),
+                axisLabels="none")
+
+plot1 = df |> ggplot(aes(x = make, y = price, fill = make)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por fabricante",
+       x = "Fabricante", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Fabricante") +
+  theme_minimal()
+
+plot1 #Visualização ruim.
+
+
+plot2 = df |> ggplot(aes(x = fuel_type, y = price, fill = fuel_type)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por tipo de combustível",
+       x = "Tipo de Combustível", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Tipo de Combustível") +
+  theme_minimal()
+
+plot2 #Possível relação
+
+
+plot3 = df |> ggplot(aes(x = aspiration, y = price, fill = aspiration)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Aspiration",
+       x = "Aspiration", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Aspiration") +
+  theme_minimal()
+
+plot3 #Parece ter relação.
+
+
+plot4 = df |> ggplot(aes(x = num_doors, y = price, fill = num_doors)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Número de Portas",
+       x = "Número de Portas", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Número de Portas") +
+  theme_minimal()
+
+plot4 #Não parece ser significante.
+
+
+plot5 = df |> ggplot(aes(x = body_style, y = price, fill = body_style)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Body Style",
+       x = "Body Style", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Body Style") +
+  theme_minimal()
+
+plot5 #Possível relação, a depender da categoria
+
+
+plot6 = df |> ggplot(aes(x = drive_wheels, y = price, 
+                         fill = drive_wheels)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Rodas Motrizes",
+       x = "Rodas Motrizes", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Rodas Motrizes") +
+  theme_minimal()
+
+plot6 #Diferença significante entre rwd e as demais categorias
+
+
+plot7 = df |> ggplot(aes(x = engine_location, 
+                         y = price, fill = engine_location)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Localização do Motor",
+       x = "Localização do Motor", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Localização do Motor") +
+  theme_minimal()
+
+plot7 #Relação clara.
+
+
+plot8 = df |> ggplot(aes(x = engine_type, y = price, fill = engine_type)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Tipo de Motor",
+       x = "Tipo de Motor", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Tipo de Motor") +
+  theme_minimal()
+
+plot8 #Diferença significante a depender da categoria
+
+
+plot9 = df |> ggplot(aes(x = num_cylinders, y = price, 
+                         fill = num_cylinders)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Número de Cilíndros",
+       x = "Número de Cilíndros", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Número de Cilíndros") +
+  theme_minimal()
+
+plot9 #Relação forte a depender do número de cilíndros
+
+
+plot10 = df |> ggplot(aes(x = fuel_system, y = price, 
+                         fill = fuel_system)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por Sistema de Combustível",
+       x = "Sistema de Combustível", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Sistema de Combustível") +
+  theme_minimal()
+
+plot10 #Possível relação envolvendo algumas categorias
+
+plt1 = multiplot(plot2, plot3, plot4, plot5, cols = 2)
+plt2 = multiplot(plot6, plot7, plot8, plot9, cols = 2)
+
+#plt3 = multiplot(plot1, plot10, cols=2) 
+#se dermos um jeito na visualização do plot 1.
+#Os boxplots apresentam possiveis valores descrepantes acima de 30000 $
+

@@ -1,3 +1,4 @@
+######Ler comentários em Notas de Edições.txt##########
 library(tidyverse)
 
 

@@ -1,0 +1,53 @@
+Para rodar os scripts, siga os seguintes passos:
+
+1 - Abrir projeto, rodar o script trat_dados.R completo.
+2 - Rodar exploratoria.R. 
+3 - Rodar modelos_simples.R (se quiser)
+4 - Rodar modelos_multiplos.R (se quiser)
+
+Considerações - exploratoria.R
+-----------------------------------------------------------------------------------
+city_mpg, highway_mpg, horsepower, engine_size, curb_weight
+width e lenght parecem fortemente correlacionados com o preço
+por todos os critérios.
+
+As variáveis bore, e wheel_base também parecem ter uma relação linear
+para com o preço, porém mais fraca. 
+
+wheel_base, no entanto, está fortemente correlacionada com length, width
+e curb_wheight, o uqe poderia causar problemas com multicolinearidade
+não parece valer a pena colocá-la já que ela explica menos que as outras 3.
+
+city_mpg está fortemente correlacionada com lenght, width, curb_weight,
+engine_size, bore (também não parece valer a pena colocá-la) e horsepower.
+
+highway_mpg também está bastante correlacionada com as mesmas variáveis e
+praticamente completamente correlacionada com city_mpg.
+
+horsepower tá bastante correlacionado com width, curb_weight, engine_size
+city_mpg e highway_mpg.
+
+engine_size tá bastante correlacionado com todas as variáveis consideradas
+relevantes ao preço.
+
+curb_weight também, incluindo bore e wheel_base.
+
+width e length estão altamente correlacionados entre si, bem como com a
+maioria das outras variáveis relevantes para o preço.
+
+Resumindo, teremos problemas com a multicolinearidade; 
+lembrando que só mencionei as contínuas.
+
+Fora isso, talvez seja interessante categorizar a variável compress_ratio e ver
+como ela se correlacionaria com o preço e com as demais.
+
+Os comentários sobre o relacionamento das discretas para com o preço (diretamente)
+estão no próprio script.
+
+Pode ser interessante recategorizar algumas das outras variáveis qualitativas
+também, além de verificar como elas se comportam na presença
+de uma outra variável (como poderia se dar a interação entre elas, seja quali ou quanti),
+explicando o preço. 
+
+Gostaria de corrigir a visualização ruim do plot1.
+
