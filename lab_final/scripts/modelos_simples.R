@@ -1,10 +1,10 @@
-fit1 = lm(price ~ length, df)
-fit2 = lm(price ~ width, df)
-fit3 = lm(price ~ curb_weight, df)
-fit4 = lm(price ~ engine_size, df)
-fit5 = lm(price ~ horsepower, df)
-fit6 = lm(price ~ city_mpg, df)
-fit7 = lm(price ~ highway_mpg, df)
+fit1 = lm(price ~ poly(length, degree = 2, raw = F), df)
+fit2 = lm(price ~ poly(width, degree = 2, raw = F), df)
+fit3 = lm(price ~ poly(curb_weight, degree = 2, raw = F), df)
+fit4 = lm(price ~ poly(engine_size, degree = 1, raw = F), df)
+fit5 = lm(price ~ poly(horsepower, degree = 1, raw = F), df)
+fit6 = lm(price ~ poly(city_mpg, degree = 4, raw = F), df)
+fit7 = lm(price ~ poly(highway_mpg, degree = 3, raw = F), df)
 summary(fit1)
 summary(fit2) #
 summary(fit3) ##

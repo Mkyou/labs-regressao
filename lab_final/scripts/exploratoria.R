@@ -1,5 +1,5 @@
 ######Ler comentários em Notas de Edições.txt##########
-
+library(DescTools)
 library(tidyverse)
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
@@ -128,7 +128,7 @@ model_hyphotesys_analyses = function(fit){
   #goldfeld-quandt
   var = gqtest(fit)
   #breush pagan
-  var2 = bptest(fit, studentize = F)
+  var2 = bptest(fit, studentize = T)
   
   #durbin watson
   indep = dwtest(fit)
@@ -165,7 +165,7 @@ my_fn <- function(data, mapping, ...){
                 fill="green", color="blue", ...)
   p}
 
-GGally::ggpairs(df[,-c(1,2,3,4,5,6,7,8,14,15,17)],
+GGally::ggpairs(df[,-c(1,2,3,4,5,6,7,8,14,15,17,20)],
                 upper = list(continuous = "cor"),
                 lower = list(continuous = my_fn),
                 axisLabels="none")
@@ -174,10 +174,10 @@ plot1 = df |> ggplot(aes(x = make, y = price, fill = make)) +
   geom_boxplot() +
   labs(title = "Preço do carro por fabricante",
        x = "Fabricante", y = "Preço do Carro ($)") +
-  scale_fill_discrete("Fabricante") +
-  theme_minimal()
+    scale_fill_discrete("Fabricante") +
+    theme_minimal()
 
-plot1 #Visualização ruim.
+#plot1 #Visualização ruim.
 
 
 plot2 = df |> ggplot(aes(x = fuel_type, y = price, fill = fuel_type)) +
@@ -187,7 +187,7 @@ plot2 = df |> ggplot(aes(x = fuel_type, y = price, fill = fuel_type)) +
   scale_fill_discrete("Tipo de Combustível") +
   theme_minimal()
 
-plot2 #Possível relação
+plot2 #Possível relação; não vai usar (multicolinearidade)
 
 
 plot3 = df |> ggplot(aes(x = aspiration, y = price, fill = aspiration)) +
@@ -197,7 +197,7 @@ plot3 = df |> ggplot(aes(x = aspiration, y = price, fill = aspiration)) +
   scale_fill_discrete("Aspiration") +
   theme_minimal()
 
-plot3 #Parece ter relação.
+plot3 #vamo usar
 
 
 plot4 = df |> ggplot(aes(x = num_doors, y = price, fill = num_doors)) +
@@ -207,7 +207,7 @@ plot4 = df |> ggplot(aes(x = num_doors, y = price, fill = num_doors)) +
   scale_fill_discrete("Número de Portas") +
   theme_minimal()
 
-plot4 #Não parece ser significante.
+plot4 #Não vamo usar
 
 
 plot5 = df |> ggplot(aes(x = body_style, y = price, fill = body_style)) +
@@ -217,7 +217,7 @@ plot5 = df |> ggplot(aes(x = body_style, y = price, fill = body_style)) +
   scale_fill_discrete("Body Style") +
   theme_minimal()
 
-plot5 #Possível relação, a depender da categoria
+plot5 #vamo usar
 
 
 plot6 = df |> ggplot(aes(x = drive_wheels, y = price, 
@@ -228,7 +228,7 @@ plot6 = df |> ggplot(aes(x = drive_wheels, y = price,
   scale_fill_discrete("Rodas Motrizes") +
   theme_minimal()
 
-plot6 #Diferença significante entre rwd e as demais categorias
+plot6 #vamo usar
 
 
 plot7 = df |> ggplot(aes(x = engine_location, 
@@ -239,7 +239,7 @@ plot7 = df |> ggplot(aes(x = engine_location,
   scale_fill_discrete("Localização do Motor") +
   theme_minimal()
 
-plot7 #Relação clara.
+plot7 #vamo usar
 
 
 plot8 = df |> ggplot(aes(x = engine_type, y = price, fill = engine_type)) +
@@ -249,18 +249,18 @@ plot8 = df |> ggplot(aes(x = engine_type, y = price, fill = engine_type)) +
   scale_fill_discrete("Tipo de Motor") +
   theme_minimal()
 
-plot8 #Diferença significante a depender da categoria
+plot8 #vamo usar
 
 
 plot9 = df |> ggplot(aes(x = num_cylinders, y = price, 
-                         fill = num_cylinders)) +
+                          fill = num_cylinders)) +
   geom_boxplot() +
-  labs(title = "Preço do carro por Número de Cilíndros",
-       x = "Número de Cilíndros", y = "Preço do Carro ($)") +
-  scale_fill_discrete("Número de Cilíndros") +
+  labs(title = "Preço do carro por número de cilíndros",
+       x = "Número de cilíndros", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Número de cilíndros") +
   theme_minimal()
 
-plot9 #Relação forte a depender do número de cilíndros
+plot9 #vamo usar
 
 
 plot10 = df |> ggplot(aes(x = fuel_system, y = price, 
@@ -271,12 +271,31 @@ plot10 = df |> ggplot(aes(x = fuel_system, y = price,
   scale_fill_discrete("Sistema de Combustível") +
   theme_minimal()
 
-plot10 #Possível relação envolvendo algumas categorias
+plot10 #não vamo usar (multicolinearidade)
+
+plot11 = df |> ggplot(aes(x = compression_ratio, y = price, 
+                          fill = compression_ratio)) +
+  geom_boxplot() +
+  labs(title = "Preço do carro por taxa de compressão",
+       x = "Taxa de compressão", y = "Preço do Carro ($)") +
+  scale_fill_discrete("Taxa de compressão") +
+  theme_minimal()
+
+#plot11 vamo usar
 
 plt1 = multiplot(plot2, plot3, plot4, plot5, cols = 2)
 plt2 = multiplot(plot6, plot7, plot8, plot9, cols = 2)
-
-#plt3 = multiplot(plot1, plot10, cols=2) 
-#se dermos um jeito na visualização do plot 1.
+plt3 = multiplot(plot10, plot11, cols=2) 
+plot1
 #Os boxplots apresentam possiveis valores descrepantes acima de 30000 $
+
+
+#relação entre variáveis categóricas
+corrplot::corrplot(DescTools::PairApply(df[,c(1,2,3,4,5,6,7,8,14,15,17,20)], 
+                                        DescTools::CramerV),
+                   method = "number", diag = F)
+
+
+#Correlação entre fuel system, compression ratio e fuel type é 1.
+cramerV(df$fuel_system, df$compression_ratio)
 

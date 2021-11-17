@@ -1,20 +1,40 @@
+mod1 = lm(price ~ poly(length, degree = 2, raw = F) + 
+          poly(width, degree = 2, raw = F) +
+          poly(curb_weight, degree = 2, raw = F) +
+          poly(engine_size, degree = 1, raw = F) +
+          poly(horsepower, degree = 1, raw = F) +
+          poly(city_mpg, degree = 4, raw = F) +
+          poly(highway_mpg, degree = 3, raw = F) +
+          compression_ratio + num_cylinders +
+          engine_type + engine_location + drive_wheels +
+          body_style + aspiration + make, df)
 
-step(lm(price ~ ., df), direction = "backward")
 
-df$num_cylinders
+mod1 |> summary()
 
-fitbetter = lm(formula = price ~ symboling + make + aspiration + body_style + 
-                 wheel_base + length + width + height + curb_weight + engine_type + 
-                 engine_size + fuel_system + bore + stroke + 
-                 compression_ratio + peak_rpm + highway_mpg, data = df)
-summary(fitbetter)
-plot(fitbetter)
+mod2 = lm(price ~ poly(length, degree = 2, raw = F) + 
+                   poly(width, degree = 2, raw = F) +
+                   poly(curb_weight, degree = 2, raw = F) +
+                   poly(engine_size, degree = 1, raw = F) +
+                   poly(horsepower, degree = 1, raw = F) +
+                   poly(city_mpg, degree = 4, raw = F) +
+                   poly(highway_mpg, degree = 3, raw = F) +
+                   compression_ratio + num_cylinders +
+                   engine_type + engine_location + drive_wheels +
+                   body_style + aspiration, df)
+
+mod2 |> summary()
 
 
-aux = residual_graph_analyses(fitbetter)
+step(mod1, direction = "both")
+step(mod2, direction = "both")
+
+
+
+aux = residual_graph_analyses(step(mod2, direction = "both"))
 aux
 
-aux2 = model_hyphotesys_analyses(fitbetter)
+aux2 = model_hyphotesys_analyses(step(mod2, direction = "both"))
 aux2[1]
 aux2[2]
 aux2[3]

@@ -78,7 +78,34 @@ df |> glimpse()
 
 #todas as observações são diferentes umas das outras
 df |> distinct()
+
+
   
+#Categorizando compression_ratio (compress>15 = 1; compress<15 = 0)
+df$compression_ratio = as_factor(ifelse(df$compression_ratio>15, 1, 0))
+
+#Verificando quantidade de valores maiores que 15
+df$compression_ratio
 
 
+df$num_cylinders = ifelse(df$num_cylinders == "eight", 8,
+                          ifelse(df$num_cylinders == "five", 5,
+                                 ifelse(df$num_cylinders == "four", 4,
+                                        ifelse(df$num_cylinders == "six", 6,
+                                               ifelse(df$num_cylinders == "three", 3, 12)))))
+
+df$num_cylinders = as.numeric(df$num_cylinders)
+
+df$num_cylinders = as_factor(ifelse(df$num_cylinders >= 8, 2,
+                                    ifelse(df$num_cylinders <= 4, 0, 1)))
+
+
+
+df$make = as.character(df$make)
+
+df$make = ifelse(df$make == "mercedes-benz", "mercedes", df$make)
+df$make = as_factor(df$make)
+df$make
+
+df = df[-67,]
 
