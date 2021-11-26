@@ -132,7 +132,7 @@ model_hyphotesys_analyses = function(fit){
   
   #durbin watson
   indep = dwtest(fit)
-  
+
   #multicolinearidade
   vifs = list(`VIFs` = vif(fit), `Média dos Vifs` = mean(vif(fit)), 
               `Tolerância` = 1/vif(fit))
