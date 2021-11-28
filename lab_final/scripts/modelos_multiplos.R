@@ -11,6 +11,8 @@ mod1 = lm(price ~ poly(length, degree = 2, raw = F) +
           engine_type + engine_location + drive_wheels +
           body_style + aspiration, df)
 
+mod1 |> summary()
+
 mod2 = lm(price ~ poly(length, degree = 2, raw = F) + 
             poly(width, degree = 2, raw = F) +
             poly(curb_weight, degree = 2, raw = F) +
@@ -44,8 +46,8 @@ ft3 = olsrr::ols_step_both_p(mod3)
 ft3$sbc
 ft3$predictors
 
-
-
+residual_graph_analyses(mod1)
+model_hyphotesys_analyses(mod1)
 
 df1 = df[]
 
@@ -62,23 +64,9 @@ df['y_boxcox'] = ((df$price^lambda)-1)/lambda
 
 
 
-model_hyphotesys_analyses(lm(y_boxcox ~ 
-                               poly(width, degree = 2, raw = F) + engine_location +
-                               poly(city_mpg, degree = 2, raw = F) + engine_type +
-                               drive_wheels + body_style +
-                               num_cylinders + compression_ratio + aspiration +
-                               wheel_base + num_doors, df[-c(42),]))
-
-
-residual_graph_analyses(lm(y_boxcox ~ 
-                             poly(width, degree = 2, raw = F) + engine_location +
-                             poly(city_mpg, degree = 2, raw = F) + engine_type +
-                             drive_wheels + body_style +
-                             num_cylinders + compression_ratio + aspiration +
-                             wheel_base + num_doors, df[-c(42),]))
 
 mod_fin = lm(y_boxcox ~ 
-               poly(width, degree = 2, raw = F) + engine_location +
+               poly(width, degree = 1, raw = F) + engine_location +
                poly(city_mpg, degree = 2, raw = F) + engine_type +
                drive_wheels + body_style +
                num_cylinders + compression_ratio + aspiration +
@@ -86,3 +74,7 @@ mod_fin = lm(y_boxcox ~
 
 mod_fin |> summary()
 
+model_hyphotesys_analyses(mod_fin)
+
+
+residual_graph_analyses(lm(mod_fin))
