@@ -1,3 +1,5 @@
+#LEMBRE DE FAZER O TESTE PARA \eta^2 E O TESTE DA ANOVA.
+
 res_vs_fitted = function(model, res_type = "deviance"){
   plot(y = residuals.glm(model, type = res_type), x = model$fitted.values,
        ylab = paste("Resíduos", res_type), xlab = "Valores Ajustados")
